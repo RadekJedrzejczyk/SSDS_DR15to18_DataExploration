@@ -8,6 +8,9 @@
     "ExecuteTime": {
      "end_time": "2025-01-09T14:45:17.812688Z",
      "start_time": "2025-01-09T14:45:15.392334Z"
+    },
+    "pycharm": {
+     "is_executing": true
     }
    },
    "outputs": [],
@@ -61,30 +64,7 @@
    "id": "70ca7659-8b86-444b-9b99-59ff76105872",
    "metadata": {},
    "source": [
-    "Usuwamy niepotrzebne dane takie jak ID obserwacji i inne techniczne informacje\n",
-    "My będziemy korzystać z:\n",
-    "\n",
-    "- u = Dane z filtra ultrafioletu\n",
-    "- g = Dane z filtra zielonego\n",
-    "- r = Dane z filtra czerwonego\n",
-    "- i = Dane z filtra bliskiej podczerwi (Near Infrared) \n",
-    "- z = Dane z filtra podczerwieni\n",
-    "- redshift = przesunięcie ku czerwieni na podstawie zwiększenia długości fali\n",
-    "\n",
-    "Jasności na filtrach są podawane w Asinh magnitudo. Wyraża się ono wzorem:\n",
-    "\n",
-    "\\begin{aligned}\n",
-    "\\frac{-2.5}{\\ln 10}  * \\text{arcsinh}( \\frac{\\frac{f}{f_0}}{2b}  +\\ln(b))\n",
-    "\\end{aligned}\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "gdzie:\n",
-    "- b jest stałą zmiękczającą można sprawdzić pod [linkiem](https://www.sdss4.org/dr17/algorithms/magnitudes/).\n",
-    "- f$_0$ to jasność odniesienia. Klasycznie jest to jasność gwiazdy Vega.\n",
-    "- f to obserwowana jasność\n",
-    "\n"
+    "I need to get rid of values that are not correlated in any way to our class - those are going to be technical informations about observatory, ID numbers etc\n"
    ]
   },
   {
@@ -128,7 +108,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "5c279f01",
+=======
    "id": "cc6b98d7",
+
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -143,6 +127,25 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "ba507d85-e8c6-4b5a-83cc-37b7f40519db",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pd.set_option('future.no_silent_downcasting', True)\n",
+    "uniques = pd.unique(df['class'])\n",
+    "binary_map = {}\n",
+    "for number, value in enumerate(uniques):\n",
+    "    binary_map[value] = number\n",
+    "df['class'] = df['class'].replace(binary_map)\n",
+    "binary_map"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+=======
+>>>>>>> wzorce-sekwencji
    "id": "c4c0dfa9-12b0-4fdb-9439-a122d4faa133",
    "metadata": {
     "ExecuteTime": {
@@ -152,25 +155,14 @@
    },
    "outputs": [],
    "source": [
-    "for column in ['ra','dec','class']:  # Ensure numerical data\n",
+    "for column in df.select_dtypes(include=['number']).columns:  # Ensure numerical data\n",
     "    plt.figure()  # Create a new figure for each histogram\n",
-    "    sns.histplot(df[column], kde=True, bins=100, color='blue')  # Histogram with KDE\n",
+    "    sns.histplot(df[column], kde=True, bins=10, color='blue')  # Histogram with KDE\n",
     "    plt.title(f'Histogram for {column}')\n",
     "    plt.xlabel(column)\n",
-    "    plt.ylabel('Amount')\n",
+    "    plt.ylabel('Frequency')\n",
     "    plt.grid(axis='y', alpha=0.75)\n",
-    "    plt.show()\n",
-    "\n",
-    "plt.figure()  # Create a new figure for each histogram\n",
-    "for column in df.select_dtypes(include=['number']).columns: \n",
-    "    if column != 'ra'and column!='dec' and column != 'class':\n",
-    "        sns.histplot(data=df,x=column,label=column,multiple='stack', kde=False, bins=10)  # Histogram with KDE\n",
-    "plt.title(f'Histogram for our data')\n",
-    "plt.legend()\n",
-    "plt.xlabel('value')\n",
-    "plt.ylabel('amount')\n",
-    "plt.grid(axis='y', alpha=0.75)\n",
-    "plt.show()"
+    "    plt.show()"
    ]
   },
   {
@@ -203,16 +195,14 @@
     "    df = df[(df[column] >= min_val) & (df[column] <= max_val)]\n",
     "df = df.reset_index(drop=True)\n",
     "\n",
-    "plt.figure()  # Create a new figure for each histogram\n",
-    "for column in df.select_dtypes(include=['number']).columns: \n",
-    "    if column != 'ra'and column!='dec' and column != 'class':\n",
-    "        sns.histplot(data=df,x=column,label=column,multiple='stack', kde=False, bins=10)  # Histogram with KDE\n",
-    "plt.title(f'Histogram for our data')\n",
-    "plt.legend()\n",
-    "plt.xlabel('value')\n",
-    "plt.ylabel('amount')\n",
-    "plt.grid(axis='y', alpha=0.75)\n",
-    "plt.show()"
+    "for column in df.select_dtypes(include=['number']).columns:  # Ensure numerical data\n",
+    "    plt.figure()  # Create a new figure for each histogram\n",
+    "    sns.histplot(df[column], kde=True, bins=10, color='blue')  # Histogram with KDE\n",
+    "    plt.title(f'Histogram for {column}')\n",
+    "    plt.xlabel(column)\n",
+    "    plt.ylabel('Frequency')\n",
+    "    plt.grid(axis='y', alpha=0.75)\n",
+    "    plt.show()"
    ]
   },
   {
@@ -220,7 +210,7 @@
    "id": "a397ad9c-414e-4053-8758-d0766c9b7331",
    "metadata": {},
    "source": [
-    "Podzielmy dane na dwa oddzielne zestawy:"
+    "Podzielmy dane na dwi oddzielne zestawy:"
    ]
   },
   {
@@ -491,6 +481,9 @@
   },
   {
    "cell_type": "markdown",
+<<<<<<< HEAD
+   "id": "7490545a",
+=======
    "id": "b7801a87-736a-471d-a14b-19d0faca8304",
    "metadata": {},
    "source": [
@@ -576,6 +569,7 @@
   {
    "cell_type": "markdown",
    "id": "e6a77568",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -589,7 +583,7 @@
   },
   {
    "cell_type": "markdown",
-   "id": "9f77a9f2",
+   "id": "74ab8182",
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -603,6 +597,9 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "15cb993c",
+=======
    "id": "001aa387-fd3d-492d-ba82-e71f25fd8e2c",
    "metadata": {},
    "outputs": [],
@@ -620,6 +617,7 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "939f24c8",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -637,7 +635,7 @@
   },
   {
    "cell_type": "markdown",
-   "id": "39f6cc7c",
+   "id": "aff368a3",
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -645,15 +643,30 @@
     }
    },
    "source": [
-    "Przed normalizacją usuneliśmy z danych klase obiektu żeby nie mała ona wpływu na dopasowanie do klasteru\n",
-    "\n",
+    "Przed normalizacją usuneliśmy z danych klase obiektu żeby nie mała ona wpływu na dopasowanie do klasteru"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3e77c9d4",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+   "source": [
     "Klasteryzacja z użyciem KMeans"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "79354200",
+=======
    "id": "3d7f70a2",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -669,7 +682,7 @@
   },
   {
    "cell_type": "markdown",
-   "id": "08bb6318",
+   "id": "0a63e7a8",
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -677,21 +690,41 @@
     }
    },
    "source": [
-    "Metoda łokcia\n",
-    "\n",
-    "Metoda łokcia to technika stosowana w analizie skupień (clustering) w celu określenia optymalnej liczby klastrów w algorytmie grupowania, takim jak k-means"
+    "Metoda łokcia"
    ]
   },
   {
+<<<<<<< HEAD
+   "cell_type": "markdown",
+   "id": "1c3191bd",
+=======
    "cell_type": "code",
    "execution_count": null,
    "id": "bb1e79e5",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
      "outputs_hidden": false
     }
    },
+<<<<<<< HEAD
+   "source": [
+    "Metoda łokcia to technika stosowana w analizie skupień (clustering) w celu określenia optymalnej liczby klastrów w algorytmie grupowania, takim jak k-means"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "885078de",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+=======
+>>>>>>> wzorce-sekwencji
    "outputs": [],
    "source": [
     "inertias = []\n",
@@ -699,59 +732,96 @@
     "    kmeans_ml = KMeans(n_clusters=k, random_state=42)\n",
     "    kmeans_ml.fit(data_scaled)\n",
     "    inertias.append(kmeans_ml.inertia_)\n",
-    "\n",
     "plt.plot(range(1, 11), inertias, marker='o')\n",
     "plt.title(\"Metoda Łokcia\")\n",
     "plt.xlabel(\"Liczba klastrów\")\n",
     "plt.ylabel(\"Inercja\")\n",
-    "plt.show()\n"
+    "plt.show()"
    ]
   },
   {
+<<<<<<< HEAD
    "cell_type": "markdown",
-   "id": "ce98b8ab-c831-4bd7-90bd-d4234901d315",
-   "metadata": {},
-   "source": [
-    "\n",
-    "\n",
-    "W naszym przypadku zdecydowaliśmy się na 3 klastry\n",
-    "\n",
-    "Rozkład danych\n"
-   ]
-  },
-  {
+   "id": "926e5b77",
+=======
    "cell_type": "code",
    "execution_count": null,
    "id": "53f0f143",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
      "outputs_hidden": false
     }
    },
+<<<<<<< HEAD
+   "source": [
+    "W naszym przypadku zdecydowaliśmy się na 3 klastry"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b3907957",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+   "source": [
+    "Rozkłąd danych"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c4017ed3",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+=======
+>>>>>>> wzorce-sekwencji
    "outputs": [],
    "source": [
     "df.groupby('Cluster').mean()"
    ]
   },
   {
+<<<<<<< HEAD
    "cell_type": "markdown",
-   "id": "52c9c5f6-2344-4646-a10f-6842475f7c81",
-   "metadata": {},
-   "source": [
-    "W powyższej tabeli widzimy srednią wartość poszczególnych kolumn dla każdego z klastrów Poniżej znajduje liczba elementów przypadających na dany klaster i klase"
-   ]
-  },
-  {
+   "id": "9cc31b6c",
+=======
    "cell_type": "code",
    "execution_count": null,
    "id": "60b97e7e",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
      "outputs_hidden": false
     }
    },
+<<<<<<< HEAD
+   "source": [
+    "W powyższej tabeli widzimy srednią wartość poszczególnych kolumn dla każdego z klastrów\n",
+    "Poniżej znajduje liczba elementów przypadających na dany klaster i klase"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c233ed91",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+=======
+>>>>>>> wzorce-sekwencji
    "outputs": [],
    "source": [
     "df['Cluster'].value_counts()"
@@ -760,7 +830,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "8bdc5d72",
+=======
    "id": "d2d58782",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -775,7 +849,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "ccda99dd",
+=======
    "id": "ee21fdec",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -793,9 +871,21 @@
    ]
   },
   {
+<<<<<<< HEAD
    "cell_type": "markdown",
-   "id": "8b21f523-26bc-46d1-b5c0-ed34e368101e",
-   "metadata": {},
+   "id": "805fc569",
+=======
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d8f0858a",
+>>>>>>> wzorce-sekwencji
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+<<<<<<< HEAD
    "source": [
     "Reprezentacja ilości elementów danej klasy w danym klastrze"
    ]
@@ -803,13 +893,15 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "id": "d8f0858a",
+   "id": "bde7775b",
    "metadata": {
     "collapsed": false,
     "jupyter": {
      "outputs_hidden": false
     }
    },
+=======
+>>>>>>> wzorce-sekwencji
    "outputs": [],
    "source": [
     "contingency_table = pd.crosstab(df['class'], df['Cluster'])\n",
@@ -823,27 +915,50 @@
    ]
   },
   {
+<<<<<<< HEAD
    "cell_type": "markdown",
-   "id": "e3ac74a1-0467-42ee-94ab-4f19c24d8ea3",
-   "metadata": {},
-   "source": [
-    "\n",
-    "\n",
-    "Reprezentacja rozkładu elementów klas na klastry\n",
-    "\n",
-    "Poniżej znajduje sie kilka wykresów przedstawiających wizualizacje podziału\n"
-   ]
-  },
-  {
+   "id": "ee9c00e9",
+=======
    "cell_type": "code",
    "execution_count": null,
    "id": "f0d3073d",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
      "outputs_hidden": false
     }
    },
+<<<<<<< HEAD
+   "source": [
+    "Reprezentacja rozkładu elementów klas na klastry"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3df2b884",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+   "source": [
+    "Poniżej znajduje sie kilka wykresów przedstawiających wizualizacje podziału"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "23d0300c",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+=======
+>>>>>>> wzorce-sekwencji
    "outputs": [],
    "source": [
     "feature_1 = df['z']\n",
@@ -864,7 +979,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "43fa8bda",
+=======
    "id": "f1685e86",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -891,7 +1010,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "d99814d3",
+=======
    "id": "338384d4",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -917,7 +1040,7 @@
   },
   {
    "cell_type": "markdown",
-   "id": "6e7f5862",
+   "id": "f63cbaa1",
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -929,9 +1052,22 @@
    ]
   },
   {
+<<<<<<< HEAD
    "cell_type": "markdown",
-   "id": "ed2eccae-9ea3-4a97-a7db-ef6b97b8d8b0",
+   "id": "a54f125a",
+   "metadata": {
+    "collapsed": false,
+    "jupyter": {
+     "outputs_hidden": false
+    }
+   },
+=======
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c7043dc1-df49-4a13-b34a-91a376854253",
    "metadata": {},
+   "outputs": [],
+>>>>>>> wzorce-sekwencji
    "source": [
     "Dla prorównania przeprowadzamy klsateryzacje na danych które zostały poddane redukcji wymiarów"
    ]
@@ -939,22 +1075,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "id": "c7043dc1-df49-4a13-b34a-91a376854253",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "uniques = pd.unique(df_PCA['class'])\n",
-    "binary_map = {}\n",
-    "for number, value in enumerate(uniques):\n",
-    "    binary_map[value] = number\n",
-    "df_PCA['class'] = df_PCA['class'].replace(binary_map)\n",
-    "binary_map"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
+<<<<<<< HEAD
+   "id": "024b6bef",
+=======
    "id": "e097fcf6",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -976,7 +1101,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "a251bac4",
+=======
    "id": "66e5c8a3",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -1001,7 +1130,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "cd287c14",
+=======
    "id": "b8f85408",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -1017,7 +1150,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "ae74e3f8",
+=======
    "id": "9fb4445a",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -1032,7 +1169,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "176056de",
+=======
    "id": "156f11ed",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -1047,7 +1188,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "7f2473ed",
+=======
    "id": "1148007b",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -1067,7 +1212,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "af4301b9",
+=======
    "id": "359fcf00",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -1089,7 +1238,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
+<<<<<<< HEAD
+   "id": "dc28461f",
+=======
    "id": "e2652e04",
+>>>>>>> wzorce-sekwencji
    "metadata": {
     "collapsed": false,
     "jupyter": {
@@ -1114,14 +1267,19 @@
    ]
   },
   {
-   "cell_type": "markdown",
-   "id": "0221bdc2-b567-4055-af8b-ccc25ce5818d",
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "edbc67d8",
    "metadata": {
     "collapsed": false,
     "jupyter": {
      "outputs_hidden": false
     }
    },
+<<<<<<< HEAD
+   "outputs": [],
+   "source": []
+=======
    "source": [
     "<h3 align = 'center'> Analiza koszykowa/reguły asocjacyjne </h3>"
    ]
@@ -1593,6 +1751,7 @@
     "\n",
     "Obiekty jasne rozkąłdają się równomiernie między galaktyk i gwiazdy natomiast blade są praktycznie nie widoczne - wskazywać może to na miejsce do poprawy jako iż kategoria 'Dim' zdaje sie nie być użyteczna, a mogłaby posłużyć do lepszego objasnienia pozostałych. Podczerwienie i bliska podczerwień wskazują jedynie nieznacznie w stronę galaktyk - ten element utworzonych reguł jest albo typowy dla naszego zbioru, albo jego powiązanie z innymi cechami wskauzje na galaktyki, sam z siebie jest jednak niewystarczający."
    ]
+>>>>>>> wzorce-sekwencji
   }
  ],
  "metadata": {
